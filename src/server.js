@@ -38,28 +38,37 @@ const proffys = [
     }
 ]
 
-const express = require('express')
-const server = express()
-const nunjucks = require('nunjucks')
-
 function pageLanding(req, res) {
-    return res.sendFile(__dirname + "/views/index.html");
+    return res.render("index.html");
 }
 
 function pageStudy(req, res) {
-    return res.sendFile(__dirname + "/views/study.html");
+    return res.render("study.html", { proffys, title: "oie!" });
 }
 
 function pageGiveClasses(req, res) {
-    return res.sendFile(__dirname + "/views/give-classes.html")
+    return res.render("give-classes.html")
 }
 
+const express = require('express')
+const server = express()
+
+//configurar nunjucks
+const nunjucks = require('nunjucks')
+nunjucks.configure('src/views', {
+    express: server,
+    noCache: true,
+})
+
 server
+//configurando arquivos estáticos
     .use(express.static("public"))
+//rotas da aplicação
     .get("/", pageLanding)
-    .get("/study", pageStudy) 
-    .get("/give-classes", pageGiveClasses)
+    .get("/study", pageStudy)
+    .get("/give-classes", pageGiveClasses)    
     .listen(5000)
+
 
 
 
